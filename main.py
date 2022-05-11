@@ -3,8 +3,8 @@ import csv
 from DemofileParse import parse_demofile
 from pathlib import Path
 
-DEM_FILE_PATH = Path(r'C:\Users\kalha\Downloads')
-CSV_FILE_PATH = Path(r'C:\Users\kalha\Downloads\data.csv')
+DEM_FILE_PATH = Path(r'C:\Users\kalha\PycharmProjects\Thesis\files')
+CSV_FILE_PATH = Path(r'C:\Users\kalha\PycharmProjects\Thesis\files\data.csv')
 
 
 def list_demofiles(path: Path) -> list:
@@ -54,11 +54,25 @@ if __name__ == '__main__':
     if demo_list:
 
         demos_to_process = check_csv(demo_list, CSV_FILE_PATH)
-        print(f'{len(demos_to_process)} files to process, commencing...')
+        demos_num = len(demos_to_process)
+        print(f'{demos_num} files to process, commencing...')
+
+        error_num = 0
+        processed_num = 0
 
         for demo_path in demos_to_process:
-            data = parse_demofile(demo_path)
-            write_data_to_csv(data, CSV_FILE_PATH)
-            print(f'{demo_path.stem} processed')
+
+            try:
+                data = parse_demofile(demo_path)
+                write_data_to_csv(data, CSV_FILE_PATH)
+                print(f'{demo_path.stem} processed')
+                processed_num += 1
+
+            except Exception as e:
+                print(e)
+                error_num += 1
+
+        print(f'Demofiles to be processed: {demos_num}   Succesfully processed: {processed_num}    Errors:{error_num}')
+
     else:
         print('No demo files found in directory!')
